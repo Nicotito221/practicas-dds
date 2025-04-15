@@ -4,109 +4,240 @@
 <head>
     <meta charset="UTF-8">
     <title>Ejercicio 2: Inscripción al Congreso Internacional</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #5d8ac5;
+            margin: 0;
+            padding: 40px 20px;
         }
-
+        
+        .form-box {
+            background-color: #ffffff;
+            max-width: 600px;
+            margin: auto;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .boton-mercado {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 12px;
+            background-color: #1100ff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .logo-mercado {
+            height: 40px;
+            vertical-align: middle;
+        }
+        
+        .inscripcion-box {
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #000000;
+            margin-bottom: 10px;
+        }
+        
+        p {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #000000;
+        }
+        
+        fieldset {
+            border: none;
+            margin-bottom: 20px;
+            padding: 0;
+        }
+        
         form {
             max-width: 600px;
             margin: auto;
         }
-
+        
         fieldset {
             margin-bottom: 15px;
             padding: 10px;
         }
-
+        
         legend {
             font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #333;
         }
-
+        
         label {
-            display: block;
-            margin-top: 10px;
+            display: inline-flex;
+            align-items: center;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #333;
+            gap: 6px;
         }
-
-        input,
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="documento"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            box-sizing: border-box;
+            margin-top: 0px;
+            margin-bottom: 4px;
+        }
+        
         select {
             width: 100%;
-            padding: 8px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
             box-sizing: border-box;
+            margin-top: 4px;
         }
-
+        
         button {
-            margin-top: 15px;
-            padding: 10px 20px;
+            width: 100%;
+            padding: 12px;
+            background-color: #1100ff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
-
-        /* Estilo para el bloque de expositores */
+        
         #expositorFields {
             display: none;
         }
     </style>
-    <script> 
-        function toggleFields(value) { 
-            var expositorBlock = document.getElementById("expositorFields"); 
-            var pagoBlock = document.getElementById("pagoField"); 
-            if (value === "expositor") { 
-                expositorBlock.style.display = "block"; 
-                pagoBlock.style.display = "none"; 
-            } else { 
-                expositorBlock.style.display = "none"; 
-                pagoBlock.style.display = "block"; 
-            } 
-        } 
-        function pagar(){
-            alert('Redirigiendo a Mercado Pago...')
+    <script>
+        let pagoRealizado = false;
+
+        function toggleFields(value) {
+            var expositorBlock = document.getElementById("expositorFields");
+            var pagoBlock = document.getElementById("pagoField");
+            var archivoInput = document.getElementById("archivo");
+
+            if (value === "expositor") {
+                expositorBlock.style.display = "block";
+                archivoInput.required = true;
+                pagoBlock.style.display = "none";
+            } else if (value === "asistente") {
+                expositorBlock.style.display = "none";
+                archivoInput.required = false;
+                pagoBlock.style.display = "block";
+            } else {
+                expositorBlock.style.display = "none";
+                archivoInput.required = false;
+                pagoBlock.style.display = "none";
+            }
         }
+
+        function pagar() {
+            alert('Redirigiendo a Mercado Pago...');
+            pagoRealizado = true;
+        }
+
+        function enviarFormulario(e) {
+            e.preventDefault();
+
+            var tipo = document.getElementById("tipoInscripcion").value;
+
+            if (tipo === "asistente" && !pagoRealizado) {
+                alert("Debes realizar el pago antes de enviar el formulario.");
+                return;
+            }
+
+            alert("Correo enviado a: " + document.getElementById("email").value + "\nGracias por inscribirse.");
+            document.getElementById("mensajeEnvio").innerText = "Formulario enviado correctamente. Revisa tu correo.";
+        }
+
+        window.onload = function() {
+            var select = document.getElementById("tipoInscripcion");
+            toggleFields(select.value);
+        };
     </script>
 </head>
 
 <body>
-    <header>
-        <h1>Inscripción al Congreso Internacional</h1>
-        <p>Complete el formulario para inscribirse al congreso. Los asistentes deberán pagar a través de Mercado Pago,
-            mientras que los expositores subirán su trabajo.</p>
-    </header>
-    <form action="#" method="post" enctype="multipart/form-data">
-        <fieldset>
-            <legend>Datos Personales</legend> <label for="nombre">Nombre</label> <input type="text" id="nombre"
-                name="nombre" placeholder="Ingrese su nombre" required> <label for="apellido">Apellido</label>
-            <input type="text" id="apellido" name="apellido" placeholder="Ingrese su apellido" required>
+    <div class="form-box">
+        <header>
+            <h1>Inscripción al Congreso Internacional</h1>
+            <p>Complete el formulario para inscribirse al congreso. Los asistentes deberán pagar a través de Mercado Pago, mientras que los expositores subirán su trabajo.</p>
+        </header>
 
-            <label for="email">Correo Electrónico</label>
-            <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required>
+        <form action="#" method="post" enctype="multipart/form-data" onsubmit="enviarFormulario(event)">
+            <fieldset>
+                <legend>Datos Personales </legend> <label for="nombre">Nombre</label> <input type="text" id="nombre" name="nombre" placeholder="Ingrese su nombre" required> <label for="apellido">Apellido</label>
+                <input type="text" id="apellido" name="apellido" placeholder="Ingrese su apellido" required>
 
-            <label for="documento">Número de Documento</label>
-            <input type="text" id="documento" name="documento" placeholder="Ingrese su número de documento" required>
-        </fieldset>
+                <label for="email">Correo Electrónico</label>
+                <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required>
 
-        <fieldset>
-            <legend>Tipo de Inscripción</legend>
-            <label for="tipoInscripcion">Seleccione el tipo de inscripción:</label>
-            <select id="tipoInscripcion" name="tipoInscripcion" onchange="toggleFields(this.value)" required>
-                <option value="">Seleccione una opción...</option>
-                <option value="asistente">Asistente (Pago requerido)</option>
-                <option value="expositor">Expositor (Subir trabajo)</option>
-            </select>
-        </fieldset>
+                <label for="documento">Número de Documento</label>
+                <input type="text" id="documento" name="documento" placeholder="Ingrese su número de documento" required>
+            </fieldset>
+            <div class="inscripcion-box">
+                <fieldset>
+                    <legend>Tipo de Inscripción</legend>
+                    <label for="tipoInscripcion">Seleccione el tipo de inscripción:</label>
+                    <select id="tipoInscripcion" name="tipoInscripcion" onchange="toggleFields(this.value)" required>
+                    <option value="">Seleccione una opción...</option>
+                    <option value="asistente">Asistente (Pago requerido)</option>
+                    <option value="expositor">Expositor (Subir trabajo)</option>
+                </select>
+                </fieldset>
 
-        <fieldset id="expositorFields">
-            <legend>Datos para Expositores</legend>
-            <label for="archivo">Subir archivo del trabajo</label>
-            <input type="file" id="archivo" name="archivo">
-        </fieldset>
+                <fieldset id="expositorFields">
+                    <legend>Datos para Expositores</legend>
+                    <label for="archivo">Subir archivo del trabajo</label>
+                    <input type="file" id="archivo" name="archivo">
+                </fieldset>
 
-        <fieldset id="pagoField">
-            <legend>Información de Pago</legend>
-            <p>El pago se realizará exclusivamente a través de Mercado Pago.</p>
-            <button type="button" onclick="pagar()">Pagar con Mercado Pago</button>
-        </fieldset>
+                <fieldset id="pagoField">
+                    <legend>Información de Pago</legend>
+                    <p>El pago se realizará exclusivamente a través de Mercado Pago.</p>
+                    <button type="button" class="boton-mercado" onclick="pagar()">
+                        <img src="https://img.icons8.com/?size=100&id=nTLVtpxsNPaz&format=png&color=000000" alt="Mercado Pago" class="logo-mercado">
+                        Pagar con Mercado Pago
+                    </button>
 
-        <button type="submit">Enviar Inscripción</button>
-    </form>
+                </fieldset>
+            </div>
+
+
+            <button type="submit">Enviar Inscripción</button>
+        </form>
+
+    </div>
+
 </body>
 
 </html>
